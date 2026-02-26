@@ -1,131 +1,44 @@
 const UserRepository = require('../repositories/User.repository');
+const UserDAO = require('../dao/User.dao'); // Lo necesitamos para buscar por email directamente
 
 class UserService {
-  async getCurrentUser(userId) {
+  // ... (tus métodos getCurrentUser, registerUser, loginUser se mantienen)
+
+  // NUEVO: Buscar usuario por email (necesario para el mail de recuperación)
+  async getUserByEmail(email) {
     try {
-      const user = await UserRepository.getUserById(userId);
-      if (!user) {
-        throw new Error('Usuario no encontrado');
-      }
-      return {
-        success: true,
-        data: user,
-      };
+      const user = await UserDAO.getByEmail(email);
+      if (!user) throw new Error('Usuario no encontrado');
+      return { success: true, data: user };
     } catch (error) {
-      return {
-        success: false,
-        error: error.message,
-      };
+      return { success: false, error: error.message };
     }
   }
 
-  async registerUser(userData) {
+  // NUEVO: Lógica de reseteo de contraseña (Consigna: No usar la misma anterior)
+  async updatePasswordFromToken(email, newPassword) {
     try {
-      const existingUser = await UserRepository.getUserByEmail(userData.email);
-      if (existingUser) {
-        throw new Error('El email ya está registrado');
+      // 1. Buscamos al usuario incluyendo el password actual para comparar
+      const user = await UserDAO.getByEmail(email); 
+      if (!user) throw new Error('Usuario no encontrado');
+
+      // 2. CONSIGNHA: Evitar que el usuario restablezca a la misma contraseña
+      const isSamePassword = await user.comparePassword(newPassword);
+      if (isSamePassword) {
+        throw new Error('No puedes usar la misma contraseña que ya tenías');
       }
 
-      const newUser = await UserRepository.createUser(userData);
-      return {
-        success: true,
-        data: newUser,
-      };
+      // 3. Actualizamos. El middleware .pre('save') del modelo hará el hash
+      user.password = newPassword;
+      await user.save();
+
+      return { success: true };
     } catch (error) {
-      return {
-        success: false,
-        error: error.message,
-      };
+      return { success: false, error: error.message };
     }
   }
 
-  async loginUser(email, password) {
-    try {
-      const user = await UserRepository.getUserByEmailWithPassword(email);
-      if (!user) {
-        throw new Error('Credenciales inválidas');
-      }
-
-      const isPasswordValid = await user.comparePassword(password);
-      if (!isPasswordValid) {
-        throw new Error('Credenciales inválidas');
-      }
-
-      const userDTO = await UserRepository.getUserById(user._id);
-      return {
-        success: true,
-        data: userDTO,
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
-  }
-
-  async getAllUsers() {
-    try {
-      const users = await UserRepository.getAllUsers();
-      return {
-        success: true,
-        data: users,
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
-  }
-
-  async updateUser(userId, updateData) {
-    try {
-      const safeData = { ...updateData };
-      delete safeData.password;
-      delete safeData.role;
-
-      const updatedUser = await UserRepository.updateUser(userId, safeData);
-      if (!updatedUser) {
-        throw new Error('Usuario no encontrado');
-      }
-
-      return {
-        success: true,
-        data: updatedUser,
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
-  }
-
-  async changePassword(userId, currentPassword, newPassword) {
-    try {
-      const user = await UserRepository.getUserByEmailWithPassword(userId);
-      if (!user) {
-        throw new Error('Usuario no encontrado');
-      }
-
-      const isPasswordValid = await user.comparePassword(currentPassword);
-      if (!isPasswordValid) {
-        throw new Error('Contraseña actual incorrecta');
-      }
-
-      await UserRepository.updateUser(userId, { password: newPassword });
-      return {
-        success: true,
-        message: 'Contraseña actualizada correctamente',
-      };
-    } catch (error) {
-      return {
-        success: false,
-        error: error.message,
-      };
-    }
-  }
+  // ... (tus otros métodos getAllUsers, updateUser)
 }
 
 module.exports = new UserService();

@@ -1,0 +1,8 @@
+# Entrega Final - Backend II: Diseño y Arquitectura
+
+## Mejoras Implementadas:
+- **Arquitectura por capas:** Separación clara entre Rutas, Controladores, Servicios y Persistencia (DAO).
+- **Patrón Repository & DTO:** Implementado en la ruta `/current` para asegurar que no se envíe información sensible del usuario.
+- **Sistema de Mailing:** Recuperación de contraseña mediante Nodemailer con tokens de JWT que expiran en 1 hora.
+- **Validación de Seguridad:** El sistema impide que el usuario restablezca su contraseña a la misma que ya tenía.
+- **RBAC (Role-Based Access Control):** Middleware de autorización dinámico para restringir acciones de Admin (Productos) y User (Carrito).
