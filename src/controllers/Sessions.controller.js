@@ -1,6 +1,6 @@
 const UserService = require('../services/User.service');
-const UserDTO = require('../dto/User.dto'); // <--- Importamos el DTO
-const transport = require('../config/mail.config'); // <--- Importamos nodemailer
+const UserDTO = require('../dto/User.dto');
+const transport = require('../config/mail.config');
 const jwt = require('jsonwebtoken');
 
 class SessionsController {
@@ -15,12 +15,11 @@ class SessionsController {
       const result = await UserService.getCurrentUser(req.user._id);
 
       if (result.success) {
-        // 2. APLICAR DTO: Evitamos enviar información sensible
         const userClean = new UserDTO(result.data);
 
         return res.status(200).json({
           success: true,
-          payload: userClean, // <--- Solo viaja la info necesaria
+          payload: userClean, 
         });
       }
       // ... manejo de errores
@@ -73,7 +72,6 @@ class SessionsController {
     }
   }
 
-  // ... (tus métodos de login, register y logout se mantienen igual)
 }
 
 module.exports = new SessionsController();

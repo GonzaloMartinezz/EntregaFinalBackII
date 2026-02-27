@@ -1,4 +1,4 @@
-const User = require('./models/User.model'); // Importas el modelo anterior
+const User = require('./models/User.model');
 
 class UserDAO {
     async getById(id) {

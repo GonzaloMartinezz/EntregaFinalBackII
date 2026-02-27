@@ -10,9 +10,9 @@ const { configureJWT } = require('../src/middlewares/auth.middleware');
 
 // Importación de Rutas
 // Cambia estas líneas según cómo se llamen tus archivos REALMENTE:
-const sessionsRoutes = require('../src/routes/sessions.routes'); // ¿Es .router o .routes?
-const productsRoutes = require('../src/routes/products.routes'); // ¿Es .router o .routes?
-const cartsRoutes    = require('../src/routes/carts.router');    // ¿C mayúscula o minúscula?
+const sessionsRoutes = require('../src/routes/sessions.routes'); 
+const productsRoutes = require('../src/routes/products.routes'); 
+const cartsRoutes    = require('../src/routes/carts.router');   
 const userRoutes = require('../src/routes/users.routes');
 
 const app = express();
@@ -32,7 +32,7 @@ connectDB();
 // Rutas de la API
 app.use('/api/sessions', sessionsRoutes);
 app.use('/api/products', productsRoutes);
-app.use('/api/carts', cartsRoutes); // <--- CONECTADO
+app.use('/api/carts', cartsRoutes); 
 app.use('/api/users', userRoutes);
 
 // Endpoint de estado
@@ -40,8 +40,10 @@ app.get('/', (req, res) => {
   res.json({
     success: true,
     message: 'Backend Ecommerce - Coderhouse Final',
-    status: 'Running',
+    mmessage : '¡Bienvenido a la API de Ecommerce! Aquí puedes gestionar productos, carritos y usuarios con autenticación JWT y recuperación de contraseña por email.',
+    status: 'OK',
     version: '2.0.0 (Arquitectura Profesional)'
+
   });
 });
 
@@ -65,5 +67,5 @@ app.listen(PORT, () => {
   `);
 });
 
-// Exportar app (Importante para tests y para el entry point)
+
 module.exports = app;

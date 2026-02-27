@@ -7,7 +7,7 @@ class UserRepository {
 
     async getUserInfo(id) {
         const user = await this.dao.getById(id);
-        return new UserDTO(user); // Aquí ocurre la magia del DTO
+        return new UserDTO(user); 
     }
 }
 

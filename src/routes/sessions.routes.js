@@ -2,7 +2,7 @@ const express = require('express');
 const router = express.Router();
 
 const SessionsController = require('../controllers/Sessions.controller');
-const { verifyJWT, authorization } = require('../middlewares/auth.middleware'); // <-- Importamos authorization
+const { verifyJWT, authorization } = require('../middlewares/auth.middleware');
 
 // Registro y Login (Públicos)
 router.post('/register', (req, res) => SessionsController.register(req, res));

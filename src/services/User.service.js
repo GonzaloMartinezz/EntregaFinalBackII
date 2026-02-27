@@ -1,8 +1,7 @@
 const UserRepository = require('../repositories/User.repository');
-const UserDAO = require('../dao/User.dao'); // Lo necesitamos para buscar por email directamente
+const UserDAO = require('../dao/User.dao');
 
 class UserService {
-  // ... (tus métodos getCurrentUser, registerUser, loginUser se mantienen)
 
   // NUEVO: Buscar usuario por email (necesario para el mail de recuperación)
   async getUserByEmail(email) {
@@ -37,8 +36,6 @@ class UserService {
       return { success: false, error: error.message };
     }
   }
-
-  // ... (tus otros métodos getAllUsers, updateUser)
 }
 
 module.exports = new UserService();
