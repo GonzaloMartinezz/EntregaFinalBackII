@@ -1,8 +1,89 @@
-# Entrega Final - Backend II: Diseño y Arquitectura
+# 🚀 Backend Ecommerce - Proyecto Final Coderhouse
 
-## Mejoras Implementadas:
-- **Arquitectura por capas:** Separación clara entre Rutas, Controladores, Servicios y Persistencia (DAO).
-- **Patrón Repository & DTO:** Implementado en la ruta `/current` para asegurar que no se envíe información sensible del usuario.
-- **Sistema de Mailing:** Recuperación de contraseña mediante Nodemailer con tokens de JWT que expiran en 1 hora.
-- **Validación de Seguridad:** El sistema impide que el usuario restablezca su contraseña a la misma que ya tenía.
-- **RBAC (Role-Based Access Control):** Middleware de autorización dinámico para restringir acciones de Admin (Productos) y User (Carrito).
+Este proyecto es una API REST profesional para una plataforma de E-commerce, desarrollada para el curso de **Programación Backend II**. La arquitectura se basa en capas para garantizar escalabilidad, seguridad y mantenimiento.
+
+## 🛠️ Tecnologías Utilizadas
+
+* **Runtime:** [Node.js](https://nodejs.org/) (v24+)
+* **Framework:** [Express.js](https://expressjs.com/)
+* **Base de Datos:** [MongoDB](https://www.mongodb.com/) con [Mongoose](https://mongoosejs.com/)
+* **Autenticación:** [Passport.js](http://www.passportjs.org/) & [JWT](https://jwt.io/)
+* **Mailing:** [Nodemailer](https://nodemailer.com/)
+* **Seguridad:** [Bcrypt](https://www.npmjs.com/package/bcrypt) para hashing de contraseñas.
+
+---
+
+## 🏗️ Arquitectura del Proyecto
+
+El proyecto implementa una arquitectura de **diseño por capas** siguiendo los patrones más utilizados en la industria:
+
+* **DAO (Data Access Object):** Gestión directa de la persistencia con la base de datos.
+* **DTO (Data Transfer Object):** Filtrado de datos sensibles (ej. en la ruta `/current`).
+* **Repository:** Capa intermedia para desacoplar la lógica de datos de la lógica de negocio.
+* **Service Layer:** Contiene toda la lógica de negocio (procesamiento de compras, validaciones).
+* **Controllers:** Manejo de las peticiones HTTP y respuestas.
+* **Middlewares:** Control de autenticación, autorización por roles (RBAC) y manejo de errores.
+
+
+
+---
+
+## 🌟 Características Principales
+
+### 1. Sistema de Autenticación y Autorización
+* Registro y Login con **JWT** almacenado en Cookies.
+* Estrategia de **Passport-JWT** para proteger rutas.
+* **RBAC (Role-Based Access Control):** * `Admin`: Puede gestionar productos (Crear, Editar, Borrar).
+    * `User`: Puede gestionar su carrito y realizar compras.
+    * `Premium`: Rol con permisos intermedios.
+
+### 2. Gestión de Productos y Carrito
+* CRUD completo de productos con persistencia en MongoDB.
+* Sistema de carrito con lógica de **Purchase**: Al finalizar una compra, se genera un **Ticket** único y se verifica el stock disponible.
+
+### 3. Recuperación de Contraseña (Mailing)
+* Integración con **Gmail** mediante Nodemailer.
+* Envío de correos con links de recuperación que expiran en 1 hora.
+* Validación de seguridad: El sistema impide utilizar la contraseña anterior al restablecerla.
+
+---
+
+## 🚀 Instalación y Uso
+
+1.  **Clonar el repositorio:**
+    ```bash
+    git clone [https://github.com/GonzaloMartinezz/EntregaFinalBackII.git](https://github.com/GonzaloMartinezz/EntregaFinalBackII.git)
+    cd EntregaFinalBackII
+    ```
+
+2.  **Instalar dependencias:**
+    ```bash
+    npm install
+    ```
+
+3.  **Configurar variables de entorno:**
+    Crea un archivo `.env` basado en el `.env.example` y completa tus credenciales.
+
+4.  **Iniciar el servidor:**
+    ```bash
+    npm run dev
+    ```
+
+---
+
+## 🛡️ Endpoints Principales
+
+| Método | Endpoint | Descripción | Acceso |
+| :--- | :--- | :--- | :--- |
+| POST | `/api/sessions/login` | Inicia sesión y genera Cookie JWT | Público |
+| GET | `/api/sessions/current` | Retorna datos del usuario (DTO) | Logueado |
+| POST | `/api/sessions/password-reset-request` | Envía mail de recuperación | Público |
+| POST | `/api/products` | Crea un nuevo producto | Admin |
+| POST | `/api/carts/:cid/purchase` | Finaliza la compra y genera ticket | User |
+
+---
+
+## 👤 Autor
+* **Gonzalo Martínez** - *Desarrollador Fullstack / Estudiante de Desarrollo de Software*
+* LinkedIn: [Tu-Link-de-LinkedIn]
+* Portfolio: [Tu-Portfolio-Web]
